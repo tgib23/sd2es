@@ -1,0 +1,75 @@
+#!/bin/bash
+
+# sd2es <support-dump file> <index name> <es_hosts>
+
+if [ $# -ne 3 ]; then
+  echo "$ sd2es <support-dump> <index> <es_hosts>" 1>&2
+  printf "\n"
+  echo "<support-dump> : output of \"/opt/mapr/support/tools/mapr-support-dump.sh\". Should be compressed with .tar."
+  echo "<index>        : index name for the dump, such as \"case_100\""
+  echo "<es_hosts>     : access point of elastic search cluster. 'http://' and ports should be added to hosts."
+  echo "               : Multiple hosts should be concat with \",\", such as http://node0:9200,http://node1:9200,http://node2:9200"
+  exit 1
+fi
+
+SD=$1
+INDEX=$2
+ES_HOSTS=$3
+
+# Should be fixed depending on your environment
+LOGSTASH_COMMAND=/usr/share/logstash/bin/logstash
+TIMEZONE="Asia/Tokyo"
+
+# Should be modified when limiting the files to upload.
+# When some logs are deleted from log_array, the services for those logs should be also deleted from svc_array.
+# More friendly configuration might be implemented if necessary
+declare -a log_array=("mapr-logs/mfs.log-3*" "mapr-logs/mfs.log-5*" " mapr-logs/warden.log*" "system/messages*" )
+declare -a svc_array=("mfs" "mfs_maprdb" "warden" "syslog")
+#declare -a log_array=("mapr-logs/warden.log*" )
+#declare -a svc_array=("warden")
+#declare -a log_array=("mapr-logs/mfs.log-3*" )
+#declare -a svc_array=("mfs" )
+
+
+echo "*** Uploading support dump with following parameters ***"
+echo "support dump   : $SD"
+echo "index name     : $INDEX"
+echo "elastic search : $ES_HOSTS"
+printf "\n\n"
+
+
+# decompress suport dump
+echo "Extracting the support dump..."
+#rm -rf sd2es_tmp
+#mkdir sd2es_tmp && tar xf $SD -C sd2es_tmp --strip-components 1
+HOSTNAME=`cat sd2es_tmp/hostname`
+cd sd2es_tmp/logs
+
+echo "Following logs are uploaded"
+for e in ${svc_array[@]}; do
+  echo ${log_array[i]}
+  let i++
+done
+
+i=0
+for e in ${svc_array[@]}; do
+        printf "\n\n\n\n"
+        echo `date` "uploading ${e} now..."
+        ls -lh ${log_array[i]}
+        echo "cat ${log_array[i]} | SERVICE_NAME=${e} INDEX=${INDEX} ES_HOSTS=${ES_HOSTS} /usr/share/logstash/bin/logstash -f ../../sd2es.conf "
+        printf "\n\n\n\n"
+        cat ${log_array[i]} | SERVICE_NAME=${svc_array[i]} INDEX=${INDEX} ES_HOSTS=${ES_HOSTS} TIMEZONE=${TIMEZONE} $LOGSTASH_COMMAND -f ../../sd2es.conf
+        let i++
+done
+
+printf "\n\n"
+echo "Uploading done."
+printf "\n\n"
+
+# es check
+DOC_COUNTS=`curl -XGET syamada-dist0:9200/${INDEX}-*/_stats?pretty | jq '._all.total.docs.count'`
+TOTAL_SIZE=`curl -XGET syamada-dist0:9200/${INDEX}-*/_stats?pretty | jq '._all.total.store.size_in_bytes'`
+
+echo "index ${INDEX} stats"
+echo "docs count :  ${DOC_COUNTS}"
+echo "total size :  ${TOTAL_SIZE} bytes"
