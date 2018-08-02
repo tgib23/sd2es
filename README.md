@@ -5,11 +5,14 @@ Just a script to upload support dump to Elasticsearch.
 ## Requirement
 
 * logstash
-    * `$ brew install logstash`
+    * `$ curl -L -O https://artifacts.elastic.co/downloads/logstash/logstash-6.0.1.zip && unzip logstash-6.0.1.zip`
 	* `$ sudo yum install logstash` 
+	* etc.,
 
 * jq
-    * `# yum install -y jq`
+    * `$ brew install jq`
+    * `$ sudo yum install -y jq`
+	* etc.,
 
 ## How to Use
 

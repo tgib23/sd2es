@@ -40,8 +40,8 @@ printf "\n\n"
 
 # decompress suport dump
 echo "Extracting the support dump..."
-#rm -rf sd2es_tmp
-#mkdir sd2es_tmp && tar xf $SD -C sd2es_tmp --strip-components 1
+rm -rf sd2es_tmp
+mkdir sd2es_tmp && tar xf $SD -C sd2es_tmp --strip-components 1
 HOSTNAME=`cat sd2es_tmp/hostname`
 cd sd2es_tmp/logs
 
@@ -56,9 +56,9 @@ for e in ${svc_array[@]}; do
         printf "\n\n\n\n"
         echo `date` "uploading ${e} now..."
         ls -lh ${log_array[i]}
-        echo "cat ${log_array[i]} | SERVICE_NAME=${e} INDEX=${INDEX} ES_HOSTS=${ES_HOSTS} /usr/share/logstash/bin/logstash -f ../../sd2es.conf "
+        echo "cat ${log_array[i]} | SERVICE_NAME=${e} INDEX=${INDEX} ES_HOSTS=${ES_HOSTS} ${LOGSTASH_COMMAND} -f ../../sd2es.conf "
         printf "\n\n\n\n"
-        cat ${log_array[i]} | SERVICE_NAME=${svc_array[i]} INDEX=${INDEX} ES_HOSTS=${ES_HOSTS} TIMEZONE=${TIMEZONE} $LOGSTASH_COMMAND -f ../../sd2es.conf
+        cat ${log_array[i]} | SERVICE_NAME=${svc_array[i]} INDEX=${INDEX} ES_HOSTS=${ES_HOSTS} TIMEZONE=${TIMEZONE} ${LOGSTASH_COMMAND} -f ../../sd2es.conf
         let i++
 done
 
