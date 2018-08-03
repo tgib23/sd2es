@@ -17,7 +17,7 @@ INDEX=$2
 ES_HOSTS=$3
 
 # Should be fixed depending on your environment
-LOGSTASH_COMMAND=/usr/share/logstash/bin/logstash
+LOGSTASH_COMMAND=logstash
 TIMEZONE="Asia/Tokyo"
 
 # Should be modified when limiting the files to upload.
@@ -47,23 +47,27 @@ cd sd2es_tmp/logs
 
 echo "Following logs are uploaded"
 for e in ${svc_array[@]}; do
-  echo ${log_array[i]}
+  ls -lh ${log_array[i]}
   let i++
 done
+
+start_time=`date +%s`
 
 i=0
 for e in ${svc_array[@]}; do
         printf "\n\n\n\n"
         echo `date` "uploading ${e} now..."
         ls -lh ${log_array[i]}
-        echo "cat ${log_array[i]} | SERVICE_NAME=${e} INDEX=${INDEX} ES_HOSTS=${ES_HOSTS} ${LOGSTASH_COMMAND} -f ../../sd2es.conf "
+        echo "cat ${log_array[i]} | SERVICE_NAME=${e} INDEX=${INDEX} ES_HOSTS=${ES_HOSTS} HOSTNAME=${HOSTNAME} TIMEZONE=${TIMEZONE} ${LOGSTASH_COMMAND} -f ../../sd2es.conf "
         printf "\n\n\n\n"
-        cat ${log_array[i]} | SERVICE_NAME=${svc_array[i]} INDEX=${INDEX} ES_HOSTS=${ES_HOSTS} TIMEZONE=${TIMEZONE} ${LOGSTASH_COMMAND} -f ../../sd2es.conf
+        cat ${log_array[i]} | SERVICE_NAME=${svc_array[i]} INDEX=${INDEX} ES_HOSTS=${ES_HOSTS} HOSTNAME=${HOSTNAME} TIMEZONE=${TIMEZONE} ${LOGSTASH_COMMAND} -f ../../sd2es.conf
         let i++
 done
 
+end_time=`date +%s`
+elapsed_time=`expr \( ${end_time} - ${start_time} \)`
 printf "\n\n"
-echo "Uploading done."
+echo "Uploading done in ${elapsed_time} seconds"
 printf "\n\n"
 
 # es check
