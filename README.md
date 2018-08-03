@@ -18,6 +18,7 @@ Just a script to upload support dump to Elasticsearch.
 ## How to Use
 
 1. Set environment variables in `sd2es`.
+
 TIMEZONE should be modified depending on the customer's location.
 Use `Canonical ID` listed [here](http://joda-time.sourceforge.net/timezones.html).
 ```
@@ -32,3 +33,5 @@ $ bash sd2es mysupport-output-01.tar case_xxxxx "http://node0:9200,http://node1:
 
 Depending on your ES and client env, It will take some time to upload those files.
 Recommend to upload before coffee/lunch break.
+
+3. Go to Kibana -> Settings. Input the index name, use @timestamp as Time-field name, and click Create.
