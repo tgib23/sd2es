@@ -37,3 +37,8 @@ Recommend to upload before coffee/lunch break.
 3. Go to Kibana -> Settings. Input the index name, use @timestamp as Time-field name, and click Create.
 
 ![kibana](https://raw.githubusercontent.com/tgib23/sd2es/master/kibana.png)
+
+4. After log investigation, delete the index if you like
+```
+$ for i in `curl -XGET ${ELASTIC_SEARCH}:9200/_aliases?pretty | grep ${INDEX_NAME} | awk -F '"' '{print $2}' ` ; do curl -XDELETE http://${ELASTIC_SEARCH}:9200/${i} ; done
+```
