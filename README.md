@@ -36,4 +36,4 @@ Recommend to upload before coffee/lunch break.
 
 3. Go to Kibana -> Settings. Input the index name, use @timestamp as Time-field name, and click Create.
 
-[!kibana](https://raw.githubusercontent.com/tgib23/sd2es/master/kibana.png)
+![kibana](https://raw.githubusercontent.com/tgib23/sd2es/master/kibana.png)
