@@ -30,3 +30,5 @@ TIMEZONE="Asia/Tokyo"
 $ bash sd2es mysupport-output-01.tar case_xxxxx "http://node0:9200,http://node1:9200,http://node2:9200"
 ```
 
+Depending on your ES and client env, It will take some time to upload those files.
+Recommend to upload before coffee/lunch break.
