@@ -23,8 +23,8 @@ TIMEZONE="Asia/Tokyo"
 # Should be modified when limiting the files to upload.
 # When some logs are deleted from log_array, the services for those logs should be also deleted from svc_array.
 # More friendly configuration might be implemented if necessary
-declare -a log_array=("mapr-logs/mfs.log-3*" "mapr-logs/mfs.log-5*" " mapr-logs/warden.log*" "system/messages*" "zookeeper-3.4.5-logs/zookeeper.log*")
-declare -a svc_array=("mfs" "mfs_maprdb" "warden" "syslog" "zookeeper")
+declare -a log_array=("mapr-logs/mfs.log-3*" "mapr-logs/mfs.log-5*" " mapr-logs/warden.log*" "system/messages*" "zookeeper-3.4.5-logs/zookeeper.log*" "hadoop-2.7.0-logs/yarn-mapr-nodemanager*log*" "hadoop-2.7.0-logs/yarn-mapr-resourcemanager*logs*" )
+declare -a svc_array=("mfs" "mfs_maprdb" "warden" "syslog" "zookeeper" "nodemanager" "resourcemanager" )
 #declare -a log_array=("mapr-logs/warden.log*" )
 #declare -a svc_array=("warden")
 #declare -a log_array=("mapr-logs/mfs.log-3*" )
