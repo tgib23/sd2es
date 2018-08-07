@@ -21,15 +21,8 @@ LOGSTASH_COMMAND=logstash
 TIMEZONE="Asia/Tokyo"
 
 # Should be modified when limiting the files to upload.
-# When some logs are deleted from log_array, the services for those logs should be also deleted from svc_array.
-# More friendly configuration might be implemented if necessary
-declare -a log_array=("mapr-logs/mfs.log-3*" "mapr-logs/mfs.log-5*" " mapr-logs/warden.log*" "system/messages*" "zookeeper-3.4.5-logs/zookeeper.log*" "hadoop-2.7.0-logs/yarn-mapr-nodemanager*log*" "hadoop-2.7.0-logs/yarn-mapr-resourcemanager*logs*" )
-declare -a svc_array=("mfs" "mfs_maprdb" "warden" "syslog" "zookeeper" "nodemanager" "resourcemanager" )
-#declare -a log_array=("mapr-logs/warden.log*" )
-#declare -a svc_array=("warden")
-#declare -a log_array=("mapr-logs/mfs.log-3*" )
-#declare -a svc_array=("mfs" )
-
+declare -a upload_array=("mfs" "mfs_maprdb" "warden" "syslog" "zookeeper" "nodemanager" "resourcemanager" )
+#declare -a upload_array=("mfs" "mfs_maprdb" "warden" "zookeeper" )
 
 echo "*** Uploading support dump with following parameters ***"
 echo "support dump   : $SD"
@@ -37,6 +30,8 @@ echo "index name     : $INDEX"
 echo "elastic search : $ES_HOSTS"
 printf "\n\n"
 
+declare -a log_array=("mapr-logs/mfs.log-3*" "mapr-logs/mfs.log-5*" " mapr-logs/warden.log*" "system/messages*" "zookeeper-3.4.5-logs/zookeeper.log*" "hadoop-2.7.0-logs/yarn-mapr-nodemanager*log*" "hadoop-2.7.0-logs/yarn-mapr-resourcemanager*logs*" )
+declare -a svc_array=("mfs" "mfs_maprdb" "warden" "syslog" "zookeeper" "nodemanager" "resourcemanager" )
 
 # decompress suport dump
 echo "Extracting the support dump..."
@@ -55,13 +50,18 @@ start_time=`date +%s`
 
 i=0
 for e in ${svc_array[@]}; do
+  j=0
+  for f in ${upload_array[@]}; do
+    if [ ${e} = ${f} ]; then
         printf "\n\n\n\n"
         echo `date` "uploading ${e} now..."
         ls -lh ${log_array[i]}
         echo "cat ${log_array[i]} | SERVICE_NAME=${e} INDEX=${INDEX} ES_HOSTS=${ES_HOSTS} HOSTNAME=${HOSTNAME} TIMEZONE=${TIMEZONE} ${LOGSTASH_COMMAND} -f ../../sd2es.conf "
         printf "\n\n\n\n"
         cat ${log_array[i]} | SERVICE_NAME=${svc_array[i]} INDEX=${INDEX} ES_HOSTS=${ES_HOSTS} HOSTNAME=${HOSTNAME} TIMEZONE=${TIMEZONE} ${LOGSTASH_COMMAND} -f ../../sd2es.conf
-        let i++
+    fi
+  done
+  let i++
 done
 
 end_time=`date +%s`
