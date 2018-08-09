@@ -21,7 +21,7 @@ LOGSTASH_COMMAND=logstash
 TIMEZONE="Asia/Tokyo"
 
 # Should be modified when limiting the files to upload.
-declare -a upload_array=("mfs" "mfs_maprdb" "warden" "syslog" "zookeeper" "nodemanager" "resourcemanager" )
+declare -a upload_array=("cldb" "mfs" "mfs_maprdb" "warden" "syslog" "zookeeper" "nodemanager" "resourcemanager" )
 #declare -a upload_array=("mfs" "mfs_maprdb" "warden" "zookeeper" )
 
 echo "*** Uploading support dump with following parameters ***"
@@ -30,8 +30,8 @@ echo "index name     : $INDEX"
 echo "elastic search : $ES_HOSTS"
 printf "\n\n"
 
-declare -a log_array=("mapr-logs/mfs.log-3*" "mapr-logs/mfs.log-5*" " mapr-logs/warden.log*" "system/messages*" "zookeeper-3.4.5-logs/zookeeper.log*" "hadoop-2.7.0-logs/yarn-mapr-nodemanager*log*" "hadoop-2.7.0-logs/yarn-mapr-resourcemanager*logs*" )
-declare -a svc_array=("mfs" "mfs_maprdb" "warden" "syslog" "zookeeper" "nodemanager" "resourcemanager" )
+declare -a log_array=("mapr-logs/cldb.log*" "mapr-logs/mfs.log-3*" "mapr-logs/mfs.log-5*" " mapr-logs/warden.log*" "system/messages*" "zookeeper-3.4.5-logs/zookeeper.log*" "hadoop-2.7.0-logs/yarn-mapr-nodemanager*log*" "hadoop-2.7.0-logs/yarn-mapr-resourcemanager*logs*" )
+declare -a svc_array=("cldb" "mfs" "mfs_maprdb" "warden" "syslog" "zookeeper" "nodemanager" "resourcemanager" )
 
 # decompress suport dump
 echo "Extracting the support dump..."
